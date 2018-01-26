@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongtu.category.mapper.CategoryItemMapper">
+    <select id="findByCid"
+            parameterType="java.lang.String"
+            resultType="com.hongtu.category.bean.CategoryItem">
+        SELECT * FROM category_item WHERE cid=#{cid}
+    </select>
+
+    <insert id="add"
+            parameterType="com.hongtu.category.bean.CategoryItem">
+        INSERT INTO category_item(cid,iid)  VALUES (#{cid},#{iid})
+    </insert>
+
+    <update id="mod"
+            parameterType="com.hongtu.category.bean.CategoryItem">
+        UPDATE category_item SET cid=#{cid} WHERE iid=#{iid}
+    </update>
+
+    <delete id="del"
+            parameterType="com.hongtu.category.bean.CategoryItem">
+        DELETE FROM category_item WHERE iid=#{value}
+    </delete>
+
+    <select id="findCountByCid"
+            resultType="int">
+        SELECT count(*) FROM item WHERE cid=#{value}
+    </select>
+</mapper>

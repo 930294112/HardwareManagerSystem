@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongtu.order.mapper.OderItemMapper">
+    <resultMap id="orderItemMap" type="com.hongtu.order.bean.OrderItem">
+        <id column="oiid" property="oiid"/>
+        <result column="total" property="total"/>
+        <result column="count" property="count"/>
+        <result column="iid" property="iid"/>
+        <result column="oid" property="oid"/>
+    </resultMap>
+    <resultMap id="ExpMap" type="com.hongtu.order.bean.OrderItem" extends="orderItemMap">
+        <association property="item" javaType="com.hongtu.item.bean.Item">
+                <id column="iid" property="iid"/>
+                <result column="iname" property="iname"/>
+                <result column="price" property="price"/>
+                <result column="viprice" property="viprice"/>
+                <result column="image" property="image"/>
+                <result column="stock" property="stock"/>
+                <result column="sales" property="sales"/>
+                <result column="des" property="des"/>
+                <result column="cid" property="cid"/>
+                <association property="category" javaType="com.hongtu.category.bean.Category">
+                    <id column="cid" property="cid"/>
+                    <result column="cname" property="cname"/>
+                </association>
+            </association>
+
+    </resultMap>
+    <select id="findByOid"
+            parameterType="java.lang.String"
+            resultMap="ExpMap">
+        SELECT * FROM oderitem oi
+        LEFT JOIN item i
+        ON oi.iid = i.iid
+        LEFT JOIN category c
+        ON i.cid = c.cid
+        WHERE oi.oid=#{value}
+
+    </select>
+</mapper>

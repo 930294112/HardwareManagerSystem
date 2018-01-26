@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongtu.order.mapper.OrderMapper">
+    <resultMap id="orderMap" type="com.hongtu.order.bean.Order">
+        <id column="oid" property="oid"/>
+        <result column="subtotal" property="subtotal"/>
+        <result column="state" property="state"/>
+        <result column="address" property="address"/>
+        <result column="context" property="context"/>
+        <result column="ordertime" property="ordertime"/>
+        <result column="uid" property="uid"/>
+        <result column="cuid" property="cuid"/>
+    </resultMap>
+    <resultMap id="ExpMap" type="com.hongtu.order.bean.Order" extends="orderMap">
+        <association property="user" javaType="com.hongtu.user.bean.User">
+            <id column="uid" property="uid"/>
+            <result column="loginame" property="loginame"/>
+            <result column="realname" property="realname"/>
+            <result column="image" property="image"/>
+            <result column="tel" property="tel"/>
+            <result column="address" property="address"/>
+            <result column="create_time" property="create_time"/>
+        </association>
+    </resultMap>
+<resultMap id="ExpCusMap" type="com.hongtu.order.bean.Order" extends="orderMap">
+    <association property="customer" javaType="com.hongtu.customer.bean.Customer">
+        <id column="cuid" property="cuid"/>
+        <result column="cuname" property="cuname"/>
+        <result column="cutel" property="cutel"/>
+    </association>
+</resultMap>
+<select id="findCount"
+        resultType="int">
+    SELECT count(*) FROM orders;
+</select>
+    <select id="findAll"
+            parameterType="com.hongtu.util.PageBean"
+            resultMap="ExpMap">
+        SELECT * FROM orders o
+        LEFT JOIN user u
+        ON o.uid = u.uid
+        <if test="condition!=null and condition!=0>0">
+            WHERE o.state=#{condition}
+        </if>
+         limit #{pageSize} offset #{startIndex}
+    </select>
+    <update id="updateState"
+            parameterType="java.lang.String">
+        UPDATE orders SET state=3 WHERE oid=#{oid}
+    </update>
+    <select id="findCountByUid"
+            parameterType="java.lang.String"
+            resultType="int">
+        SELECT count(*) FROM orders WHERE uid=#{value}
+    </select>
+    <select id="findCountByCuid"
+            parameterType="java.lang.String"
+            resultType="int">
+        SELECT count(*) FROM orders WHERE cuid=#{value}
+    </select>
+    <select id="findByUid"
+            parameterType="com.hongtu.util.PageBean"
+            resultMap="ExpMap">
+        SELECT * FROM orders o
+        LEFT JOIN user u
+        ON o.uid=u.uid
+        <if test="condition!=null">
+            WHERE o.uid=#{condition}
+        </if>
+        limit #{pageSize} offset #{startIndex}
+    </select>
+
+    <select id="findByCuid"
+            parameterType="com.hongtu.util.PageBean"
+            resultMap="ExpCusMap">
+        SELECT * FROM orders o
+        LEFT JOIN customer c
+        ON o.cuid = c.cuid
+        <if test="condition!=null">
+            WHERE o.cuid=#{condition}
+        </if>
+        limit #{pageSize} offset #{startIndex}
+    </select>
+    <select id="findById"
+            parameterType="java.lang.String"
+            resultMap="ExpMap">
+         SELECT * FROM orders o
+         LEFT JOIN user u
+         ON o.uid = u.uid
+         WHERE o.oid=#{oid}
+    </select>
+
+    <update id="addCustomer"
+            parameterType="com.hongtu.order.bean.Order">
+        UPDATE orders SET cuid=#{cuid} WHERE oid=#{oid}
+    </update>
+</mapper>

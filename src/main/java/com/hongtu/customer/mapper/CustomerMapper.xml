@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongtu.customer.mapper.CustomerMapper">
+<select id="findCount"
+        resultType="int">
+    SELECT count(*) FROM customer
+</select>
+
+    <select id="findAll"
+            parameterType="com.hongtu.util.PageBean"
+            resultType="com.hongtu.customer.bean.Customer">
+        SELECT * FROM customer
+        limit #{pageSize} offset #{startIndex};
+    </select>
+
+    <select id="findByName"
+            parameterType="java.lang.String"
+            resultType="com.hongtu.customer.bean.Customer">
+        SELECT * FROM customer WHERE cuname=#{value}
+    </select>
+    <insert id="save"
+            parameterType="com.hongtu.customer.bean.Customer">
+        INSERT  INTO  customer(cuid,cuname,cutel) VALUES (#{cuid},#{cuname},#{cutel})
+    </insert>
+
+    <delete id="deleteById"
+            parameterType="java.lang.String">
+        DELETE FROM customer WHERE cuid=#{value}
+    </delete>
+
+    <select id="findAllCustomerNoPage"
+            resultType="com.hongtu.customer.bean.Customer">
+        SELECT * FROM customer
+    </select>
+
+    <select id="findById"
+            parameterType="java.lang.String"
+            resultType="com.hongtu.customer.bean.Customer">
+        SELECT * FROM customer WHERE cuid=#{value}
+    </select>
+    <select id="findCountQueyr"
+            parameterType="com.hongtu.customer.bean.Customer"
+            resultType="int">
+        SELECT count(*) FROM customer
+         <if test="cuname != ''">
+                WHERE cuname LIKE "%"#{cuname}"%"
+            </if>
+
+
+    </select>
+
+    <select id="query"
+            parameterType="com.hongtu.util.PageBean"
+            resultType="com.hongtu.customer.bean.Customer">
+        SELECT * FROM customer
+        <if test="condition!=null and condition.length>0">
+            WHERE customer.cuname like "%"#{condition}"%"
+        </if>
+        limit #{pageSize} offset #{startIndex};
+    </select>
+</mapper>

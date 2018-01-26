@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongtu.item.mapper.ItemMapper">
+    <resultMap id="itemMap" type="com.hongtu.item.bean.Item">
+        <id column="iid" property="iid"/>
+        <result column="iname" property="iname"/>
+        <result column="price" property="price"/>
+        <result column="viprice" property="viprice"/>
+        <result column="image" property="image"/>
+        <result column="cid" property="cid"/>
+    </resultMap>
+<select id="findAll"
+        parameterType="com.hongtu.util.PageBean"
+        resultMap="itemMap">
+    SELECT * FROM item
+    <if test="condition!=null and condition.length>0 " >
+        ORDER BY ${column} ${condition}
+    </if>
+   limit #{pageSize} offset #{startIndex}
+
+
+</select>
+<select id="findById"
+        resultMap="itemMap"
+        parameterType="java.lang.String">
+    SELECT * FROM item WHERE iid=#{iid}
+</select>
+    <delete id="delItem"
+            parameterType="java.lang.String">
+        DELETE FROM item WHERE iid = #{iid}
+    </delete>
+    <update id="modItem"
+            parameterType="com.hongtu.item.bean.Item">
+         UPDATE item SET iname=#{iname},price=#{price},viprice=#{viprice},stock=#{stock},sales=#{sales},cid=#{cid},des=#{des} WHERE iid=#{iid}
+    </update>
+    <insert id="addItem"
+            parameterType="com.hongtu.item.bean.Item">
+        INSERT INTO item(iid,iname,price,viprice,image,stock,sales,cid,des) VALUES (#{iid},#{iname},#{price},#{viprice},#{image},#{stock},#{sales},#{cid},#{des})
+    </insert>
+
+    <select id="findCount"
+            resultType="int">
+        SELECT count(*) FROM item
+    </select>
+
+    <select id="findCountByName"
+            parameterType="java.lang.String"
+            resultType="int">
+         SELECT count(*) FROM item WHERE iname LIKE "%"#{iname}"%"
+
+    </select>
+
+    <select id="queryByName"
+            parameterType="com.hongtu.util.PageBean"
+            resultType="com.hongtu.item.bean.Item">
+        SELECT * FROM  item
+        <if test="condition!=null and condition.length>0">
+            WHERE item.iname like "%"#{condition}"%"
+        </if>
+        limit #{pageSize} offset #{startIndex};
+    </select>
+</mapper>
