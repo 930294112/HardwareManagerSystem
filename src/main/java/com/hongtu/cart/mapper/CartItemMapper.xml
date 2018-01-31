@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hongtu.cart.mapper.CartItemMapper">
+    <resultMap id="cartItemMap" type="com.hongtu.cart.bean.CartItem">
+        <id column="id" property="id"/>
+        <result column="count" property="count"/>
+        <result column="iid" property="iid"/>
+    </resultMap>
+    <resultMap id="ExpMap" type="com.hongtu.cart.bean.CartItem" extends="cartItemMap">
+        <association property="item" javaType="com.hongtu.item.bean.Item">
+            <id column="iid" property="iid"/>
+            <result column="iname" property="iname"/>
+            <result column="price" property="price"/>
+            <result column="viprice" property="viprice"/>
+            <result column="image" property="image"/>
+            <result column="stock" property="stock"/>
+            <result column="sales" property="sales"/>
+            <result column="des" property="des"/>
+            <result column="cid" property="cid"/>
+        </association>
+    </resultMap>
+<select id="findByIid"
+        parameterType="java.lang.String"
+        resultType="ExpMap">
+    SELECT * FROM cartitem c
+    LEFT JOIN item i
+    ON c.iid = i.iid
+    WHERE  iid=#{iid}
+</select>
+    <insert id="insert"
+            parameterType="com.hongtu.cart.bean.CartItem">
+        INSERT  INTO  cartitem(id, count, iid,uid) VALUES (#{id},#{count},#{iid},#{uid})
+    </insert>
+    <update id="update"
+            parameterType="com.hongtu.cart.bean.CartItem">
+        UPDATE cartitem SET count=#{count} WHERE id=#{id}
+    </update>
+    <select id="findByIidAndUid"
+            parameterType="com.hongtu.cart.bean.CartItem"
+            resultType="cartItemMap">
+        SELECT * FROM  cartitem WHERE iid=#{iid} AND uid=#{uid}
+    </select>
+
+    <select id="findAll"
+            parameterType="java.lang.String"
+            resultType="ExpMap">
+        SELECT * FROM cartitem c
+        LEFT JOIN item i
+        ON c.iid = i.iid
+        WHERE c.uid = #{uid}
+
+    </select>
+
+    <select id="findByUid"
+            parameterType="java.lang.String"
+            resultType="cartItemMap">
+        SELECT * FROM cartitem WHERE uid=#{value}
+    </select>
+</mapper>

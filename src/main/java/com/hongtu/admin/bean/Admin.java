@@ -9,6 +9,8 @@ public class Admin{
    private String newpwd;
    private String repwd;
 
+
+
     @Override
     public String toString() {
         return "Admin{" +
@@ -22,6 +24,12 @@ public class Admin{
 
     public Admin(String aid, String aname, String apwd, String newpwd, String repwd) {
         this.aid = aid;
+        this.aname = aname;
+        this.apwd = apwd;
+        this.newpwd = newpwd;
+        this.repwd = repwd;
+    }
+    public Admin(String aname, String apwd, String newpwd, String repwd) {
         this.aname = aname;
         this.apwd = apwd;
         this.newpwd = newpwd;
